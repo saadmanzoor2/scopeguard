@@ -19,7 +19,7 @@ Built for Hacktoberfest Lahore 2026 (Riphah International University).
 ## AI component
 | Item | Value |
 |---|---|
-| Model | **Qwen3-4B** (`qwen3:4b`), about 4.0B parameters (limit: 8B) |
+| Model | **Qwen3-1.7B** (`qwen3:1.7b`), about 1.7B parameters (limit: 8B) |
 | Runtime | **Ollama** (local), `/api/chat` endpoint |
 | License of model | Apache-2.0 (Qwen team) |
 | Role | Core: reads the message and produces all structured analysis; without it the app has no output |
@@ -32,7 +32,7 @@ The code never fabricates a result: if the model is offline or returns unusable 
 flowchart LR
     U[Freelancer] --> UI[Streamlit UI - app.py]
     UI --> L[Core logic - scopeguard.py]
-    L --> M[Qwen3-4B via local Ollama]
+    L --> M[Qwen3-1.7B via local Ollama]
     M --> L
     L --> UI
     UI --> U
@@ -43,7 +43,7 @@ flowchart LR
 flowchart LR
     I[Client message] --> V((Validate input))
     V --> P((Build prompt + JSON schema))
-    P --> M[Qwen3-4B / Ollama]
+    P --> M[Qwen3-1.7B / Ollama]
     M --> J((Parse + validate JSON))
     J --> G((Verify quotes in original text))
     G --> S((Compute risk score))
@@ -56,7 +56,7 @@ sequenceDiagram
     actor F as Freelancer
     participant UI as Streamlit
     participant C as scopeguard.py
-    participant O as Ollama (qwen3:4b)
+    participant O as Ollama (qwen3:1.7b)
     F->>UI: Paste message, click Analyze
     UI->>C: analyze(text)
     C->>C: validate_input
@@ -70,15 +70,15 @@ sequenceDiagram
 ## Setup
 Requires Python 3.10+ and [Ollama](https://ollama.com).
 ```bash
-ollama pull qwen3:4b          # about 2.5 GB, one time
-git clone <YOUR_REPO_URL> scopeguard && cd scopeguard
+ollama pull qwen3:1.7b          # about 1.4 GB, one time
+git clone https://github.com/saadmanzoor2/scopeguard.git scopeguard && cd scopeguard
 python -m venv .venv
 source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 streamlit run app.py
 ```
-Optional environment variables (see `.env.example`): `OLLAMA_URL`, `OLLAMA_MODEL` (e.g. `qwen3:1.7b` as a smaller fallback; check its size is still <= 8B).
-Windows PowerShell: `$env:OLLAMA_MODEL="qwen3:1.7b"` before `streamlit run app.py`.
+Optional environment variables (see `.env.example`): `OLLAMA_URL`, `OLLAMA_MODEL` (e.g. `qwen3:4b` for a larger model; keep it at or below 8B).
+Windows PowerShell: `$env:OLLAMA_MODEL="qwen3:4b"` before `streamlit run app.py`.
 
 ## Usage example
 Click **Load vague brief** in the sidebar, then **Analyze brief**. Input: *"...You can make small changes whenever I want, right?... Budget is flexible, we can discuss after you start."* Expected: several highlighted risky phrases (revisions, budget, deadline), a Medium/High risk score, and a draft reply with clarifying questions.
@@ -89,16 +89,16 @@ Live model check (Ollama running): `python tests/live_check.py`
 
 | # | Scenario | Expected | Actual | Status |
 |---|---|---|---|---|
-| 1 | Offline unit tests (8 tests: validation, JSON parsing, grounding, scoring, HTML escape, fake-model pipeline, offline error) | all pass | 8 passed in author's sandbox | PASS (re-run on lab PC: PENDING) |
-| 2 | Vague brief, real model | >= 2 verified flags, Medium/High | PENDING | PENDING |
-| 3 | Clear brief, real model | lower score than vague brief | PENDING | PENDING |
+| 1 | Offline unit tests (8 tests: validation, JSON parsing, grounding, scoring, HTML escape, fake-model pipeline, offline error) | all pass | 8 passed on author's Ubuntu laptop | PASS |
+| 2 | Vague brief, real model | >= 2 verified flags, Medium/High | 2 verified flags (vague scope, revisions), score 43 (Medium). Missed the ASAP deadline and flexible budget. | PASS |
+| 3 | Clear brief, real model | lower score than vague brief | Score 41 (Medium), only 2 points below the vague brief. Flagged "Deadline: 30 November" as high risk (false positive). 1 invented-quote flag was removed by the checker. | PASS (weak separation) |
 | 4 | Ollama stopped | friendly error, no crash | PENDING | PENDING |
 | 5 | Empty / 5-character input | validation error | PENDING | PENDING |
 
 Update the Actual/Status columns with what you really observe.
 
 ## Known limitations
-- A 4B model can miss risks or give weak "why" text; the quote check removes invented quotes but cannot prove the reasoning is right.
+- Tested with the 1.7B model: it over-flagged a clear brief and missed some risks (see test table). Small models can miss risks or give weak "why" text; the quote check removes invented quotes but cannot prove the reasoning is right.
 - Tuned for English (Roman Urdu messages are not tested).
 - Risk score weights are hand-chosen, not statistically validated.
 - Not legal advice.
@@ -108,4 +108,4 @@ Update the Actual/Status columns with what you really observe.
 - <Teammate>: <contribution>
 
 ## License and acknowledgements
-MIT License (see `LICENSE`). Uses Qwen3-4B (Qwen team, Apache-2.0), Ollama (MIT), Streamlit (Apache-2.0), Requests (Apache-2.0), pytest (MIT). AI coding assistance was used during development; design decisions, testing and demo are the team's own.
+MIT License (see `LICENSE`). Uses Qwen3-1.7B (Qwen team, Apache-2.0), Ollama (MIT), Streamlit (Apache-2.0), Requests (Apache-2.0), pytest (MIT). AI coding assistance was used during development; design decisions, testing and demo are the team's own.

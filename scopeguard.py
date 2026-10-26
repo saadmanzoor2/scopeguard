@@ -8,7 +8,7 @@ import re
 import requests
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
-MODEL = os.getenv("OLLAMA_MODEL", "qwen3:4b")  # Qwen3-4B, ~4.0B parameters
+MODEL = os.getenv("OLLAMA_MODEL", "qwen3:1.7b")  # Qwen3-1.7B, ~1.7B parameters
 MIN_CHARS, MAX_CHARS = 30, 6000
 
 CATEGORIES = ["vague_scope", "unlimited_revisions", "unpaid_extras",
