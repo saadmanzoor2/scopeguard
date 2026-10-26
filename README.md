@@ -67,6 +67,8 @@ sequenceDiagram
     UI-->>F: score, highlights, questions, draft reply
 ```
 
+> **Runs locally.** The model runs on your own machine through Ollama, so client messages never leave your computer. For this reason there is no hosted version: a cloud server has no Ollama model to talk to. To try it, follow the Setup steps below.
+
 ## Setup
 Requires Python 3.10+ and [Ollama](https://ollama.com).
 ```bash
