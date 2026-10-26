@@ -104,8 +104,13 @@ Update the Actual/Status columns with what you really observe.
 - Not legal advice.
 
 ## Team
-- Saad Manzoor: <describe your actual contribution>
-- <Teammate>: <contribution>
+- Saad Manzoor : Set up and ran the project end to end (Ollama, Qwen3-1.7B model,
+  Python environment), ran the offline tests and the live model tests on a real
+  laptop, recorded the actual results and limitations in this README, created and
+  published the GitHub repository, and prepared the demo. The initial code, prompt
+  design and documentation were drafted with Claude (an AI assistant); we reviewed,
+  tested and edited them. 
+
 
 ## License and acknowledgements
 MIT License (see `LICENSE`). Uses Qwen3-1.7B (Qwen team, Apache-2.0), Ollama (MIT), Streamlit (Apache-2.0), Requests (Apache-2.0), pytest (MIT). AI coding assistance was used during development; design decisions, testing and demo are the team's own.
